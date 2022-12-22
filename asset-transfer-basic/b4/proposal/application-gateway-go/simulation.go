@@ -11,11 +11,12 @@ import (
 func main() {
 	startTime := time.Date(2022, time.April, 1, 4, 0, 0, 0, time.Local)
 	interval := 1
+	speed := 6
 	var wg sync.WaitGroup
 	wg.Add(2)
 	go func() {
 		defer wg.Done()
-		cnsm.AllConsumers(startTime, interval)
+		cnsm.AllConsumers(startTime, speed, interval)
 	}()
 	go func() {
 		defer wg.Done()

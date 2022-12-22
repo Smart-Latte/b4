@@ -16,14 +16,16 @@ type2: 普通充電 夜に充電
 type3: 急速充電 昼
 */
 /* ユーザごとに充電開始時間と希望充電時間を私が決める（ランダムではない）*/
-var startTime time.Time
-var auctionInterval time.Duration
+var startTime time.Time // シミュレーション開始時間
+var auctionInterval time.Duration // オークション時間
+var speed int // 何倍速か
 
 // ゴールーチンで各ユーザ起動
 // input: シミュレーション開始時間
-func AllConsumers(start time.Time, interval int) {
+func AllConsumers(start time.Time, auctionSpeed int interval int) {
 	startTime = start
 	fmt.Println(startTime)
+	speed = auctionSpeed
 	auctionInterval = time.Duration(interval)
 	consumer("consumer1", 1, 100000, 1000, 8, 1)
 
@@ -55,6 +57,10 @@ func consumer(username string, add time.Duration, battery float64, chargedEnergy
 			fmt.Printf("break\n")
 			break
 		}
+		// tickerではなく、getEnergy後に再計算
+		// getEnergyが返ってくるまでにかかる時間は1分以上
+		// 返ってくる前にtickerでやってもいい？前々回までのデータを使って次の入札をすることになる
+		// [100, 200, 10, ]みたいに得られた電力量保存？
 		// getEnergy := bid(math.Ceil(amountPerMin * 2), lat, lon, username, batteryLife)
 		// ログ
 		<-ticker.C
